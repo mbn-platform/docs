@@ -85,7 +85,10 @@ function request({method = 'GET', url, body, keyId, secret}) {
 
 function signRequestParams({method, url, nonce, body = '', secret}) {
 	const params = `${method}\n${url}\n${nonce}\n${body}`;
-	return hmac(toLengthPrefixedBuffer(params), secret);
+	return hmac(
+		toLengthPrefixedBuffer(params),
+		Buffer.isBuffer(secret) ? secret : Buffer.from(secret, 'hex')
+	);
 }
 
 function toLengthPrefixedBuffer(msg) {
